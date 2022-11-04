@@ -1,7 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login_app/login_page.dart';
-import 'package:flutter_login_app/home_page.dart';
+import 'package:flutter_login_app/auth/auth_page.dart';
+import 'package:flutter_login_app/pages/home_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -15,7 +17,7 @@ class MainPage extends StatelessWidget {
         if (snapshot.hasData) {
           return HomePage();
         } else {
-          return LoginPage();
+          return AuthPage();
         }
       },
     ));

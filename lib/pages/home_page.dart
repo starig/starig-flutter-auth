@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +20,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Signed in as: ' + user.email!),
+            Text('Signed in as: ${user.email!}'),
             MaterialButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();

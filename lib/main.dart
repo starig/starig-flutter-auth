@@ -2,7 +2,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login_app/main_page.dart';
+import 'package:flutter_login_app/auth/main_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
