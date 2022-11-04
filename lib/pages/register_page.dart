@@ -37,10 +37,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool passwordConfirmed() {
     if (_passwordController.text.trim() == _confirmPasswordControlller.text.trim()) {
-      print('true');
       return true;
     } else {
-      print('false');
       return false;
     }
   }
