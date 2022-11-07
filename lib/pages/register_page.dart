@@ -31,6 +31,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future sighUp() async {
     if (passwordConfirmed()) {
+      //loading circle
+      showDialog(context: context, builder: (context) {
+        return Center(child: CircularProgressIndicator(
+          color: Colors.deepPurple,
+        ));
+      });
+
       // authenticate user
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -42,6 +49,9 @@ class _RegisterPageState extends State<RegisterPage> {
         _firstnameController.text.trim(),
         int.parse(_ageController.text.trim()),
       );
+
+      // pop the loading circle
+      Navigator.of(context).pop();
     }
   }
 

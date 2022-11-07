@@ -18,12 +18,26 @@ class _LoginPageState extends State<LoginPage> {
   // text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool hidePass = true;
 
   Future signIn() async {
+    //loading circle
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+              child: CircularProgressIndicator(
+            color: Colors.deepPurple,
+          ));
+        });
+
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
+    // pop the loading circle
+    Navigator.of(context).pop();
   }
 
   @override
@@ -98,8 +112,19 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextField(
                           controller: _passwordController,
-                          obscureText: true,
+                          obscureText: hidePass,
                           decoration: InputDecoration(
+                            suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    hidePass = !hidePass;
+                                  });
+                                },
+                                child: Icon(
+                                  hidePass
+                                      ? Icons.abc
+                                      : Icons.password,
+                                )),
                             border: InputBorder.none,
                             hintText: 'Password',
                           ),
@@ -140,7 +165,8 @@ class _LoginPageState extends State<LoginPage> {
                   // sign in button
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
                         return ForgotPasswordPage();
                       }));
                     },
