@@ -44,7 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future addUserDetails(String firstname) async {
     FirebaseFirestore.instance.collection('users').add({
       'first name': firstname
-    }).then((value) => print('user added')).catchError((e) => print(e));
+    }).then((value) => null).catchError((e) => print(e));
   }
 
   bool passwordConfirmed() {
