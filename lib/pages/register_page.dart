@@ -20,6 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _firstnameController = TextEditingController();
+  final _ageController = TextEditingController();
 
   @override
   void dispose() {
@@ -37,14 +38,19 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       // add user details
-      addUserDetails(_firstnameController.text.trim());
+      addUserDetails(
+        _firstnameController.text.trim(),
+        int.parse(_ageController.text.trim()),
+      );
     }
   }
 
-  Future addUserDetails(String firstname) async {
-    FirebaseFirestore.instance.collection('users').add({
-      'first name': firstname
-    }).then((value) => null).catchError((e) => print(e));
+  Future addUserDetails(String firstname, int age) async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .add({'first name': firstname, 'age': age})
+        .then((value) => null)
+        .catchError((e) => print(e));
   }
 
   bool passwordConfirmed() {
@@ -119,6 +125,31 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextField(
+                          keyboardType: TextInputType.number,
+                          controller: _ageController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Age',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: TextField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -192,13 +223,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(12)),
                           child: Center(
                               child: Text(
-                                'Sign Up',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ))),
+                            'Sign Up',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ))),
                     ),
                   ),
                   SizedBox(

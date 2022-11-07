@@ -14,16 +14,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
+  bool isDesc = false;
 
   // document IDs
   List<String> docIds = [];
 
   // get document IDs
   Future getDocIDs() async {
-    await FirebaseFirestore.instance.collection('users').get().then(
-          (value) => value.docs.forEach((element) {
-            docIds.add(element.reference.id);
-          }),
+    await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('age', descending: isDesc)
+        .get()
+        .then(
+          (value) {
+            docIds = [];
+            value.docs.forEach((element) {
+              docIds.add(element.reference.id);
+            });
+          },
         );
   }
 
@@ -48,6 +56,14 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  isDesc = !isDesc;
+                });
+              },
+              child: Icon(isDesc ? Icons.arrow_drop_down : Icons.arrow_drop_up),
+            ),
             Expanded(
                 child: FutureBuilder(
               future: getDocIDs(),
@@ -58,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: ListTile(
-                          tileColor: Colors.grey[400],
+                          tileColor: Colors.grey[300],
                           title: GetUserName(
                             documentId: docIds[index],
                           ),
