@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordControlller = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _firstnameController = TextEditingController();
 
   @override
   void dispose() {
@@ -28,15 +30,26 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future sighUp() async {
     if (passwordConfirmed()) {
+      // authenticate user
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      // add user details
+      addUserDetails(_firstnameController.text.trim());
     }
   }
 
+  Future addUserDetails(String firstname) async {
+    FirebaseFirestore.instance.collection('users').add({
+      'first name': firstname
+    }).then((value) => print('user added')).catchError((e) => print(e));
+  }
+
   bool passwordConfirmed() {
-    if (_passwordController.text.trim() == _confirmPasswordControlller.text.trim()) {
+    if (_passwordController.text.trim() ==
+        _confirmPasswordController.text.trim()) {
       return true;
     } else {
       return false;
@@ -71,6 +84,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   // Hello again
                   SizedBox(
                     height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: TextField(
+                          controller: _firstnameController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'First Name',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -131,7 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: TextField(
-                          controller: _confirmPasswordControlller,
+                          controller: _confirmPasswordController,
                           obscureText: true,
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -156,13 +192,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(12)),
                           child: Center(
                               child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ))),
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ))),
                     ),
                   ),
                   SizedBox(
